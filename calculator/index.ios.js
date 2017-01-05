@@ -12,6 +12,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
+var globalData = 0;
 var calMethod = '';
 var operator = '', operand = '';
 
@@ -33,6 +34,13 @@ var Cell = React.createClass({
 });
 
 export default class calculator extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showText: '0',
+    };
+  }
+
   handlePress(obj) {
     console.log(obj);
     if (calMethod === '') { 
@@ -49,9 +57,16 @@ export default class calculator extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Calculator</Text>
+        <View style={styles.screen}>
+          <Text style={styles.show}>{this.state.showText}</Text>
+        </View>
         <View style={styles.board}>
           <View style={styles.row}>
-            <Cell textData="1" typeStyle={styles.cell}/>
+            <Cell 
+              textData="1" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 1)}
+            />
             <Cell textData="2" typeStyle={styles.cell}/>
             <Cell textData="3" typeStyle={styles.cell}/>
             <Cell textData="+" typeStyle={styles.signCell} textStyle={styles.textSigInside}/>
@@ -92,14 +107,23 @@ var styles = StyleSheet.create({
   title: {
     fontFamily: 'Chalkduster',
     fontSize: 39,
-    color: 'gray',
-    marginBottom: 40,
+    color: 'white',
+    marginBottom: 20,
+  },
+  screen: {
+    alignItems: 'flex-end',
+  },
+  show: {
+    fontFamily: 'Arial',
+    fontSize: 25,
+    color: 'white',
+    margin: 10,
   },
   container: {
     flex: 1, 
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5fcff', 
+    backgroundColor: 'black', 
   },
   cell: {
     height: 80,
