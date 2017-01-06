@@ -13,8 +13,9 @@ import {
 } from 'react-native';
 
 var globalData = 0;
-var calMethod = '';
-var operator = '', operand = '';
+var numNow = "";
+var numStack = [];
+var sigStack = [];
 
 var Cell = React.createClass({
   render () {
@@ -41,16 +42,44 @@ export default class calculator extends Component {
     };
   }
 
+  // 处理点击事件
   handlePress(obj) {
-    console.log(obj);
-    if (calMethod === '') { 
-      operator += obj.toString();
+    if (typeof(obj) == 'number') {
+      numNow += obj.toString();
+      this.setState({
+        showText: numNow,
+      });
     } else {
-      operand += obj.toString();
+      numStack.push(parseInt(parseInt(this.state.showText)));
+      sigStack.push(obj.toString());
+      numNow = '';
+      if (obj.toString() === '=') {
+        var sig0 = sigStack.pop();
+        var sig1 = sigStack.pop();
+        var num1 = numStack.pop();
+        var num2 = numStack.pop(); 
+        var res = 0;
+        if (sig1 === '+') {
+          res = num1 + num2; 
+        } else if (sig1 === '-') {
+          res = num2 - num1;
+        } else if (sig1 === '*') {
+          res = num1 * num2;
+        } else if (sig1 === '/') {
+          res = num2 / num1;
+        }
+        this.setState({
+          showText: res.toString(),
+        });
+      }
+      if (obj.toString() === 'C') {
+        numStack = [];
+        sigStack = [];
+        this.setState({
+          showText: '0',
+        });
+      }
     }
-    this.setState({
-      hey: calMethod == '' ? operator : operand,
-    })
   } 
 
   render() {
@@ -67,27 +96,93 @@ export default class calculator extends Component {
               typeStyle={styles.cell}
               onPress={this.handlePress.bind(this, 1)}
             />
-            <Cell textData="2" typeStyle={styles.cell}/>
-            <Cell textData="3" typeStyle={styles.cell}/>
-            <Cell textData="+" typeStyle={styles.signCell} textStyle={styles.textSigInside}/>
+            <Cell 
+              textData="2" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 2)}  
+            />
+            <Cell 
+              textData="3" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 3)}
+            />
+            <Cell 
+              textData="+" 
+              typeStyle={styles.signCell} 
+              textStyle={styles.textSigInside}
+              onPress={this.handlePress.bind(this, '+')}
+            />
           </View>
           <View style={styles.row}>
-            <Cell textData="4" typeStyle={styles.cell}/>
-            <Cell textData="5" typeStyle={styles.cell}/>
-            <Cell textData="6" typeStyle={styles.cell}/>
-            <Cell textData="-" typeStyle={styles.signCell} textStyle={styles.textSigInside}/>
+            <Cell 
+              textData="4" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 4)}
+            />
+            <Cell 
+              textData="5" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 5)}
+            />
+            <Cell 
+              textData="6" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 6)}
+            />
+            <Cell 
+              textData="-" 
+              typeStyle={styles.signCell} 
+              textStyle={styles.textSigInside}
+              onPress={this.handlePress.bind(this, '-')}
+            />
           </View>
           <View style={styles.row}>
-            <Cell textData="7" typeStyle={styles.cell}/>
-            <Cell textData="8" typeStyle={styles.cell}/>
-            <Cell textData="9" typeStyle={styles.cell}/>
-            <Cell textData="×" typeStyle={styles.signCell} textStyle={styles.textSigInside}/>
+            <Cell 
+              textData="7" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 7)}
+            />
+            <Cell 
+              textData="8" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 8)}
+            />
+            <Cell 
+              textData="9" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 9)}
+            />
+            <Cell 
+              textData="×" 
+              typeStyle={styles.signCell} 
+              textStyle={styles.textSigInside}
+              onPress={this.handlePress.bind(this, '*')}
+            />
           </View>
           <View style={styles.row}>
-            <Cell textData="AC" typeStyle={styles.signCell} textStyle={styles.textSigInside}/>
-            <Cell textData="0" typeStyle={styles.cell}/>
-            <Cell textData="=" typeStyle={styles.signCell} textStyle={styles.textSigInside}/>
-            <Cell textData="÷" typeStyle={styles.signCell} textStyle={styles.textSigInside}/>
+            <Cell 
+              textData="AC" 
+              typeStyle={styles.signCell} 
+              textStyle={styles.textSigInside}
+              onPress={this.handlePress.bind(this, 'C')}
+            />
+            <Cell 
+              textData="0" 
+              typeStyle={styles.cell}
+              onPress={this.handlePress.bind(this, 0)}
+            />
+            <Cell 
+              textData="=" 
+              typeStyle={styles.signCell} 
+              textStyle={styles.textSigInside}
+              onPress={this.handlePress.bind(this, '=')}
+            />
+            <Cell 
+              textData="÷" 
+              typeStyle={styles.signCell} 
+              textStyle={styles.textSigInside}
+              onPress={this.handlePress.bind(this, '+')}
+            />
           </View>
         </View>
       </View>
